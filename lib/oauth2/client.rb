@@ -138,12 +138,12 @@ module OAuth2
       response = request(options[:token_method], token_url, opts)
       error = Error.new(response)
       if response.parsed['access_token'] == 'access_token'
-        access_token = { access_token: CGI::parse(response.body)['access_token'][0] }
+        resp_hash = { access_token: CGI::parse(response.body)['access_token'][0] }
       else
-        access_token = { access_token: response.parsed['access_token'] }
+        resp_hash = { access_token: response.parsed['access_token'] }
       end
-      fail(error) if options[:raise_errors] && !(access_token.is_a?(Hash) && access_token)
-      access_token_class.from_hash(self, response.parsed.merge(access_token_opts))
+      fail(error) if options[:raise_errors] && !(resp_hash.is_a?(Hash) && resp_hash)
+      access_token_class.from_hash(self, resp_hash.merge(access_token_opts))
     end
 
     # The Authorization Code strategy
