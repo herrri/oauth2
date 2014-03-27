@@ -137,7 +137,12 @@ module OAuth2
       end
       response = request(options[:token_method], token_url, opts)
       error = Error.new(response)
-      fail(error) if options[:raise_errors] && !(response.parsed.is_a?(Hash) && response.parsed['access_token'])
+      if !response.parsed['access_token']
+        access_token = CGI::parse(response.body)['access_token']
+      else
+        access_token = response.parsed['access_token']
+      end
+      fail(error) if options[:raise_errors] && !(response.parsed.is_a?(Hash) && access_token)
       access_token_class.from_hash(self, response.parsed.merge(access_token_opts))
     end
 
