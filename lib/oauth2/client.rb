@@ -142,7 +142,7 @@ module OAuth2
       else
         access_token = { access_token: response.parsed['access_token'] }
       end
-      fail(error) if options[:raise_errors] && !(response.parsed.is_a?(Hash) && access_token)
+      fail(error) if options[:raise_errors] && !(access_token.is_a?(Hash) && access_token)
       access_token_class.from_hash(self, response.parsed.merge(access_token_opts))
     end
 
